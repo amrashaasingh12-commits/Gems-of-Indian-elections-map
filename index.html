@@ -80,9 +80,13 @@
     }
 
 .state-label {
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 600;
   fill: #243b53;
+  stroke: #f8f7f3;
+  stroke-width: 2px;
+  stroke-linejoin: round;
+  paint-order: stroke;
   text-anchor: middle;
   dominant-baseline: middle;
   pointer-events: none;
@@ -257,6 +261,7 @@ const archiveEntries = [
           .text(d => getStateName(d));
 
 
+
 const labelFeatures = data.features.filter((feature, index, features) => {
   const name = getStateName(feature);
   return features.findIndex(
@@ -264,15 +269,28 @@ const labelFeatures = data.features.filter((feature, index, features) => {
   ) === index;
 });
 
+function getLabelPosition(feature) {
+  const name = getStateName(feature);
+  if (name === "Delhi") return projection([77.4, 28.6]);
+  if (name === "Haryana") return projection([75.7, 29.5]);
+  if (name.toLowerCase().includes("dadra") &&
+      name.toLowerCase().includes("daman")) {
+    return projection([72.8, 21.5]);
+  }
+  return path.centroid(feature);
+}
+
 svg.selectAll(".state-label")
   .data(labelFeatures, d => getStateName(d))
   .join("text")
   .attr("class", "state-label")
-  .attr("x", d => path.centroid(d)[0])
-  .attr("y", d => path.centroid(d)[1])
+  .attr("x", d => getLabelPosition(d)[0])
+  .attr("y", d => getLabelPosition(d)[1])
   .text(d => {
     const name = getStateName(d);
     const shortNames = {
+      "Delhi": "Delhi",
+      "Haryana": "Haryana",
       "Andaman and Nicobar Islands": "A&N Islands",
       "Arunachal Pradesh": "Arunachal",
       "Himachal Pradesh": "Himachal",
@@ -280,10 +298,11 @@ svg.selectAll(".state-label")
       "Madhya Pradesh": "MP",
       "Uttar Pradesh": "UP",
       "Andhra Pradesh": "Andhra",
-      "Tamil Nadu": "Tamil Nadu"
+      "Dadra and Nagar Haveli and Daman and Diu": "DNH & Daman-Diu"
     };
     return shortNames[name] || name;
   });
+
 
         
         svg.selectAll("path")
