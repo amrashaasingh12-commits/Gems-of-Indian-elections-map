@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Map | Gems of Indian Elections</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #f8f7f3;
+      color: #252c35;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background: #243b53;
+      color: white;
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: clamp(24px, 4vw, 36px);
+    }
+
+    header p {
+      margin: 0;
+      line-height: 1.6;
+      color: #e6edf4;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 24px 16px 40px;
+    }
+
+    .intro {
+      line-height: 1.7;
+      max-width: 760px;
+      margin: 0 auto 20px;
+      text-align: center;
+    }
+
+    .map-card {
+      background: white;
+      border: 1px solid #e1e5e9;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 4px 16px #243b5310;
+    }
+
+    #map {
+      width: 100%;
+      min-height: 300px;
+      display: block;
+    }
+
+    .state {
+      fill: #dce8e6;
+      stroke: #ffffff;
+      stroke-width: 1.1;
+      cursor: pointer;
+      transition: fill 0.15s ease;
+    }
+
+    .state:hover,
+    .state:focus {
+      fill: #e8bd76;
+      outline: none;
+    }
+
+    .state.selected {
+      fill: #c77b42;
+    }
+
+    .details {
+      margin-top: 16px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #e1e5e9;
+      border-radius: 12px;
+      line-height: 1.6;
+    }
+
+    .details h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .hint {
+      color: #596675;
+      font-size: 14px;
+    }
+
+    .source {
+      margin-top: 22px;
+      color: #596675;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    a { color: #245c78; }
+
+    @media (max-width: 600px) {
+      main { padding: 16px 10px 28px; }
+      .map-card { padding: 4px; }
+      #map { min-height: 240px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Gems of Indian Elections</h1>
+    <p>An archive of electoral-roll issues and election-related evidence</p>
+  </header>
+
+  <main>
+    <p class="intro">
+      Select a state or Union Territory to explore the geographical
+      coverage of this archive. The map will be connected to the
+      collected evidence entries in a later step.
+    </p>
+
+    <section class="map-card" aria-label="Interactive map of India">
+      <svg id="map" viewBox="0 0 800 680"
+           role="img" aria-label="Clickable map of Indian states and Union Territories">
+        <text x="400" y="320" text-anchor="middle" fill="#596675">
+          Loading the map of India…
+        </text>
+      </svg>
+    </section>
+
+    <section class="details" aria-live="polite">
+      <h2 id="state-name">Explore a state</h2>
+      <p id="state-info">
+        Click any state or Union Territory on the map to select it.
+      </p>
+      <p class="hint" id="archive-status">
+        Archive entries have not yet been connected to the map.
+      </p>
+    </section>
+
+    <p class="source">
+      Map boundary data:
+      <a href="https://github.com/iamaanahmad/GeoJson-of-Indian-States"
+         target="_blank" rel="noopener noreferrer">
+        GeoJson of Indian States
+      </a>.
+      Boundary data is provided for reference; verify its accuracy
+      before relying on it for official or legal purposes.
+    </p>
+  </main>
+
+  <script>
+    const svg = d3.select("#map");
+    const width = 800;
+    const height = 680;
+
+    const nameElement = document.getElementById("state-name");
+    const infoElement = document.getElementById("state-info");
+    const statusElement = document.getElementById("archive-status");
+
+    function getStateName(feature) {
+      const p = feature.properties || {};
+      return p.name || p.NAME_1 || p.ST_NM ||
+             p.shapeName || p.state || p.NAME ||
+             "State or Union Territory";
+    }
+
+    function showError(message) {
+      svg.selectAll("*").remove();
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height / 2 - 10)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#9b3030")
+        .text(message);
+
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height / 2 + 22)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#596675")
+        .style("font-size", "13px")
+        .text("Check your internet connection and reload the page.");
+    }
+
+    async function drawMap() {
+      try {
+        const response = await fetch(
+          "https://raw.githubusercontent.com/iamaanahmad/GeoJson-of-Indian-States/main/indian-states.geojson"
+        );
+
+        if (!response.ok) {
+          throw new Error("Map data could not be loaded.");
+        }
+
+        const data = await response.json();
+
+        if (!data.features || !data.features.length) {
+          throw new Error("No state boundary data was found.");
+        }
+
+        const projection = d3.geoMercator();
+        projection.fitExtent(
+          [[20, 20], [width - 20, height - 20]],
+          data
+        );
+
+        const path = d3.geoPath().projection(projection);
+        svg.selectAll("*").remove();
+
+        let selectedElement = null;
+
+        svg.selectAll("path")
+          .data(data.features)
+          .join("path")
+          .attr("class", "state")
+          .attr("d", path)
+          .attr("tabindex", 0)
+          .attr("role", "button")
+          .attr("aria-label", d => getStateName(d))
+          .append("title")
+          .text(d => getStateName(d));
+
+        svg.selectAll("path")
+          .on("click", function(event, feature) {
+            if (selectedElement) {
+              selectedElement.classList.remove("selected");
+            }
+
+            selectedElement = this;
+            this.classList.add("selected");
+
+            const name = getStateName(feature);
+            nameElement.textContent = name;
+            infoElement.textContent =
+              "You selected " + name + ".";
+            statusElement.textContent =
+              "Archive entries for this area have not yet been connected. " +
+              "No incident count is available from this map yet.";
+          })
+          .on("keydown", function(event, feature) {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              this.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+              );
+            }
+          });
+
+      } catch (error) {
+        showError("The map could not be loaded.");
+      }
+    }
+
+    drawMap();
+  </script>
+</body>
+</html>
