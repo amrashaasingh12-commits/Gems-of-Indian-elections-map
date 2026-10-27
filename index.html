@@ -257,13 +257,37 @@ const archiveEntries = [
             selectedElement = this;
             this.classList.add("selected");
 
-            const name = getStateName(feature);
-            nameElement.textContent = name;
-            infoElement.textContent =
-              "You selected " + name + ".";
-            statusElement.textContent =
-              "Archive entries for this area have not yet been connected. " +
-              "No incident count is available from this map yet.";
+            
+const name = getStateName(feature);
+nameElement.textContent = name;
+
+const entries = archiveEntries.filter(
+  entry => entry.state.toLowerCase() === name.toLowerCase()
+);
+
+infoElement.textContent = entries.length === 0
+  ? "No entries have been added to the map for this area yet."
+  : entries.length + (entries.length === 1
+      ? " archive entry"
+      : " archive entries") + " for " + name + ".";
+
+statusElement.replaceChildren();
+
+if (entries.length === 0) {
+  statusElement.textContent =
+    "This means no entries are currently connected to this state in the archive, not that no incidents occurred.";
+} else {
+  entries.forEach(entry => {
+    const item = document.createElement("p");
+    const link = document.createElement("a");
+    link.href = entry.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = entry.id + " — " + entry.title;
+    item.appendChild(link);
+    statusElement.appendChild(item);
+  });
+}
           })
           .on("keydown", function(event, feature) {
             if (event.key === "Enter" || event.key === " ") {
