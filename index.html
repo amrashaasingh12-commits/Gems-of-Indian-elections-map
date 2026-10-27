@@ -256,13 +256,35 @@ const archiveEntries = [
           .append("title")
           .text(d => getStateName(d));
 
+
+const labelFeatures = data.features.filter((feature, index, features) => {
+  const name = getStateName(feature);
+  return features.findIndex(
+    other => getStateName(other) === name
+  ) === index;
+});
+
 svg.selectAll(".state-label")
-  .data(data.features)
+  .data(labelFeatures, d => getStateName(d))
   .join("text")
   .attr("class", "state-label")
   .attr("x", d => path.centroid(d)[0])
   .attr("y", d => path.centroid(d)[1])
-  .text(d => getStateName(d));
+  .text(d => {
+    const name = getStateName(d);
+    const shortNames = {
+      "Andaman and Nicobar Islands": "A&N Islands",
+      "Arunachal Pradesh": "Arunachal",
+      "Himachal Pradesh": "Himachal",
+      "Jammu and Kashmir": "J&K",
+      "Madhya Pradesh": "MP",
+      "Uttar Pradesh": "UP",
+      "Andhra Pradesh": "Andhra",
+      "Tamil Nadu": "Tamil Nadu"
+    };
+    return shortNames[name] || name;
+  });
+
         
         svg.selectAll("path")
           .on("click", function(event, feature) {
