@@ -269,16 +269,34 @@ const labelFeatures = data.features.filter((feature, index, features) => {
   ) === index;
 });
 
+
 function getLabelPosition(feature) {
-  const name = getStateName(feature);
-  if (name === "Delhi") return projection([77.4, 28.6]);
-  if (name === "Haryana") return projection([75.7, 29.5]);
-  if (name.toLowerCase().includes("dadra") &&
-      name.toLowerCase().includes("daman")) {
-    return projection([72.8, 21.5]);
-  }
-  return path.centroid(feature);
+  const name = getStateName(feature).toLowerCase();
+
+  const positions = [
+    { match: ["madhya pradesh"], coords: [78.5, 23.5] },
+    { match: ["maharashtra"], coords: [75.8, 19.2] },
+    { match: ["gujarat"], coords: [71.8, 22.5] },
+    { match: ["kerala"], coords: [76.4, 10.5] },
+    { match: ["tamil nadu"], coords: [78.5, 11.0] },
+    { match: ["assam"], coords: [92.8, 26.0] },
+    { match: ["haryana"], coords: [76.0, 29.2] },
+    { match: ["delhi", "nct of delhi"], coords: [77.2, 28.6] },
+    {
+      match: ["dadra and nagar haveli and daman and diu"],
+      coords: [72.8, 20.8]
+    }
+  ];
+
+  const entry = positions.find(item =>
+    item.match.some(part => name.includes(part))
+  );
+
+  return entry
+    ? projection(entry.coords)
+    : path.centroid(feature);
 }
+
 
 svg.selectAll(".state-label")
   .data(labelFeatures, d => getStateName(d))
