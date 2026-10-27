@@ -247,7 +247,7 @@ const archiveEntries = [
         const path = d3.geoPath().projection(projection);
         svg.selectAll("*").remove();
 
-        let selectedElement = null;
+        let selectedStateName = null;
 
         svg.selectAll("path")
           .data(data.features)
@@ -334,13 +334,13 @@ svg.selectAll(".state-label")
         
         svg.selectAll("path")
           .on("click", function(event, feature) {
-            if (selectedElement) {
-              selectedElement.classList.remove("selected");
-            }
+selectedStateName = getStateName(feature);
 
-            selectedElement = this;
-            this.classList.add("selected");
-
+svg.selectAll("path.state")
+  .classed("selected", d =>
+    getStateName(d).toLowerCase() ===
+    selectedStateName.toLowerCase()
+  );
             
 const name = getStateName(feature);
 nameElement.textContent = name;
