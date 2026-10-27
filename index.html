@@ -256,6 +256,14 @@ const archiveEntries = [
           .append("title")
           .text(d => getStateName(d));
 
+svg.selectAll(".state-label")
+  .data(data.features)
+  .join("text")
+  .attr("class", "state-label")
+  .attr("x", d => path.centroid(d)[0])
+  .attr("y", d => path.centroid(d)[1])
+  .text(d => getStateName(d));
+        
         svg.selectAll("path")
           .on("click", function(event, feature) {
             if (selectedElement) {
