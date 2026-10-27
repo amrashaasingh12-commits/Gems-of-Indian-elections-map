@@ -167,10 +167,20 @@
     const statusElement = document.getElementById("archive-status");
 
     function getStateName(feature) {
-      const p = feature.properties || {};
-      return p.name || p.NAME_1 || p.ST_NM ||
-             p.shapeName || p.state || p.NAME ||
-             "State or Union Territory";
+  const p = feature.properties || {};
+  return p.name ||
+         p.NAME_1 ||
+         p.ST_NM ||
+         p.shapeName ||
+         p.state ||
+         p.NAME ||
+         p.st_nm ||
+         p.STNAME ||
+         p.NAME_0 ||
+         p.district ||
+         p.STATE ||
+         p.State ||
+         "State name unavailable";
     }
 
     function showError(message) {
