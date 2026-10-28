@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Archive | Gems of Indian Elections</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f8f7f3;
+  color: #252c35;
+}
+
+header {
+  background: #243b53;
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0 0 10px;
+}
+
+header p {
+  margin: 0;
+  color: #e6edf4;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 30px 20px;
+}
+
+.intro {
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+.search-box {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #e1e5e9;
+}
+
+.search-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+input, select {
+  padding: 12px;
+  border: 1px solid #b8c2cc;
+  border-radius: 6px;
+  font-size: 15px;
+  background: white;
+  width: 100%;
+}
+
+.buttons {
+  margin-top: 25px;
+  display: flex;
+  gap: 12px;
+}
+
+button {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.search-button {
+  background: #243b53;
+  color: white;
+}
+
+.clear-button {
+  background: #e5e9ed;
+  color: #252c35;
+}
+
+.results {
+  margin-top: 35px;
+}
+
+.result-card {
+  background: white;
+  border: 1px solid #e1e5e9;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.result-card h3 {
+  margin-top: 0;
+}
+
+.result-card a {
+  color: #245c78;
+  text-decoration: none;
+}
+
+.result-card a:hover {
+  text-decoration: underline;
+}
+
+.metadata {
+  color: #596675;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.notice {
+  color: #596675;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 650px) {
+  .search-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Gems of Indian Elections</h1>
+  <p>Advanced Electoral Evidence Search</p>
+</header>
+
+<main>
+
+<p class="intro">
+Search the Gems of Indian Elections archive using keywords,
+state or Union Territory, type of electoral issue, or year.
+You can use one search field or combine several fields to narrow
+your results.
+</p>
+
+<section class="search-box">
+
+<form id="searchForm">
+
+<div class="search-grid">
+
+<div class="field">
+<label for="keyword">Keywords</label>
+<input
+  type="text"
+  id="keyword"
+  placeholder="Enter name, constituency, incident, etc.">
+</div>
+
+<div class="field">
+<label for="state">State / Union Territory</label>
+<select id="state">
+<option value="">All States and Union Territories</option>
+</select>
+</div>
+
+<div class="field">
+<label for="category">Type of Electoral Issue</label>
+<select id="category">
+<option value="">All Issue Categories</option>
+</select>
+</div>
+
+<div class="field">
+<label for="year">Year</label>
+<select id="year">
+<option value="">All Years</option>
+</select>
+</div>
+
+</div>
+
+<div class="buttons">
+<button type="submit" class="search-button">
+Search Archive
+</button>
+
+<button type="reset" class="clear-button">
+Clear Filters
+</button>
+</div>
+
+</form>
+
+</section>
+
+<section class="results">
+
+<h2>Search Results</h2>
+
+<p id="resultCount" aria-live="polite"></p>
+
+<div id="resultsList"></div>
+
+</section>
+
+<p class="notice">
+The number of entries reflects material collected by this archive
+and does not represent the total number of electoral incidents
+in any state or Union Territory. Titles describe material as
+published or submitted to the archive and do not independently
+establish the claims made.
+</p>
+
+</main>
+
+<script>
+
+const archiveEntries = [
+  {
+    id: "IN-2026-0001",
+    title: "In Bengal, Tribunal Remedy has Been Slowest Where the SIR Has Affected Muslim Voters the Most",
+    state: "West Bengal",
+    category: "SIR Exclusions",
+    year: "2026",
+    url: "https://gemsofindianelections.wordpress.com/2026/10/28/in-2026-0001-in-bengal-tribunal-remedy-has-been-slowest-where-the-sir-has-affected-muslim-voters-the-most/"
+  },
+  {
+    id: "IND-2026-0002",
+    title: "TDP goons snatch nomination papers of the woman YSRCP candidate",
+    state: "Andhra Pradesh",
+    category: "Nomination Issues",
+    year: "2026",
+    url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0002-tdp-goons-snatch-nomination-papers-of-the-woman-ysrcp-candidate/"
+  },
+  {
+    id: "IND-2026-0003",
+    title: "Goons snatch nomination papers of opposition candidates",
+    state: "Andhra Pradesh",
+    category: "Nomination Issues",
+    year: "2026",
+    url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0003-goons-snatch-nomination-papers-of-opposition-candidates/"
+  },
+  {
+    id: "IND-2026-0004",
+    title: "Man snatches nomination forms and tears them in front of electoral officers and police",
+    state: "Andhra Pradesh",
+    category: "Nomination Issues",
+    year: "2026",
+    url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0004-man-snatches-nomination-forms-and-tears-them-in-front-of-electoral-officers-and-police/"
+  },
+  {
+    id: "IND-2026-0005",
+    title: "TDP members snatched and tore opposition member’s nomination form in front of electoral officers",
+    state: "Andhra Pradesh",
+    category: "Nomination Issues",
+    year: "2026",
+    url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0005-tdp-members-snatched-and-tore-opposition-members-nomination-form-in-front-of-electoral-officers/"
+  },
+  {
+    id: "IND-2026-0006",
+    title: "TDP goon snatches nomination papers from returning officer",
+    state: "Andhra Pradesh",
+    category: "Nomination Issues",
+    year: "2026",
+    url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0006-tdp-goon-snatches-nomination-papers-from-returning-officer/"
+  },
+  {
+    id: "IND-2026-0007",
+    title: "Nomination papers forcefully snatched and torn inside the nomination centre",
+    state: "Andhra Pradesh",
+    category: "Nomination Issues",
+    year: "2026",
+    url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0007-nomination-papers-forcefully-snatched-and-torn-inside-the-nomination-centre/"
+  },
+  {
+    id: "IND-2026-0008",
+    title: "Name mishaps in Allahabad-Jhansi Graduate MLC election 2026",
+    state: "Uttar Pradesh",
+    category: "Electoral-Roll Problems",
+    year: "2026",
+    url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0008-name-mishaps-in-allahabad-jhansi-graduate-mlc-election-2026/"
+  }
+];
+
+const form = document.getElementById("searchForm");
+const keywordInput = document.getElementById("keyword");
+const stateSelect = document.getElementById("state");
+const categorySelect = document.getElementById("category");
+const yearSelect = document.getElementById("year");
+const resultsList = document.getElementById("resultsList");
+const resultCount = document.getElementById("resultCount");
+
+function populateDropdown(select, values) {
+  [...new Set(values)]
+    .sort((a, b) => a.localeCompare(b))
+    .forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
+    });
+}
+
+populateDropdown(stateSelect, archiveEntries.map(e => e.state));
+populateDropdown(categorySelect, archiveEntries.map(e => e.category));
+populateDropdown(yearSelect, archiveEntries.map(e => e.year));
+
+function searchArchive() {
+  const keyword = keywordInput.value.trim().toLowerCase();
+  const state = stateSelect.value;
+  const category = categorySelect.value;
+  const year = yearSelect.value;
+
+  const matches = archiveEntries.filter(entry => {
+    const searchableText =
+      `${entry.id} ${entry.title} ${entry.state} ${entry.category} ${entry.year}`
+        .toLowerCase();
+
+    return (
+      (!keyword || searchableText.includes(keyword)) &&
+      (!state || entry.state === state) &&
+      (!category || entry.category === category) &&
+      (!year || entry.year === year)
+    );
+  });
+
+  resultsList.replaceChildren();
+
+  resultCount.textContent =
+    `${matches.length} ${matches.length === 1 ? "entry" : "entries"} found`;
+
+  if (matches.length === 0) {
+    const message = document.createElement("p");
+    message.textContent =
+      "No matching entries were found. Try changing or clearing your filters.";
+    resultsList.appendChild(message);
+    return;
+  }
+
+  matches.forEach(entry => {
+    const card = document.createElement("article");
+    card.className = "result-card";
+
+    const heading = document.createElement("h3");
+    const link = document.createElement("a");
+
+    link.href = entry.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = `${entry.id} — ${entry.title}`;
+
+    heading.appendChild(link);
+
+    const metadata = document.createElement("p");
+    metadata.className = "metadata";
+    metadata.textContent =
+      `${entry.state} | ${entry.category} | ${entry.year}`;
+
+    card.appendChild(heading);
+    card.appendChild(metadata);
+    resultsList.appendChild(card);
+  });
+}
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  searchArchive();
+});
+
+form.addEventListener("reset", () => {
+  setTimeout(searchArchive, 0);
+});
+
+searchArchive();
+
+</script>
+
+</body>
+</html>
