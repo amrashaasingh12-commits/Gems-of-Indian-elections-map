@@ -253,6 +253,7 @@ const archiveEntries = [
     title: "In Bengal, Tribunal Remedy has Been Slowest Where the SIR Has Affected Muslim Voters the Most",
     state: "West Bengal",
     category: "SIR Exclusions",
+    sourceType:"News Report",
     year: "2026",
     url: "https://gemsofindianelections.wordpress.com/2026/10/28/in-2026-0001-in-bengal-tribunal-remedy-has-been-slowest-where-the-sir-has-affected-muslim-voters-the-most/"
   },
@@ -261,6 +262,7 @@ const archiveEntries = [
     title: "TDP goons snatch nomination papers of the woman YSRCP candidate",
     state: "Andhra Pradesh",
     category: "Others",
+    sourceType:"X (formerly Twitter)",
     year: "2026",
     url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0002-tdp-goons-snatch-nomination-papers-of-the-woman-ysrcp-candidate/"
   },
@@ -269,6 +271,7 @@ const archiveEntries = [
     title: "Goons snatch nomination papers of opposition candidates",
     state: "Andhra Pradesh",
     category: "Others",
+    sourceType:"X (formerly Twitter)",
     year: "2026",
     url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0003-goons-snatch-nomination-papers-of-opposition-candidates/"
   },
@@ -277,6 +280,7 @@ const archiveEntries = [
     title: "Man snatches nomination forms and tears them in front of electoral officers and police",
     state: "Andhra Pradesh",
     category: "Others",
+    sourceType:"X (formerly Twitter)",
     year: "2026",
     url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0004-man-snatches-nomination-forms-and-tears-them-in-front-of-electoral-officers-and-police/"
   },
@@ -285,6 +289,7 @@ const archiveEntries = [
     title: "TDP members snatched and tore opposition member’s nomination form in front of electoral officers",
     state: "Andhra Pradesh",
     category: "Others",
+    sourceType:"X (formerly Twitter)",
     year: "2026",
     url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0005-tdp-members-snatched-and-tore-opposition-members-nomination-form-in-front-of-electoral-officers/"
   },
@@ -293,6 +298,7 @@ const archiveEntries = [
     title: "TDP goon snatches nomination papers from returning officer",
     state: "Andhra Pradesh",
     category: "Others",
+    sourceType:"X (formerly Twitter)",
     year: "2026",
     url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0006-tdp-goon-snatches-nomination-papers-from-returning-officer/"
   },
@@ -301,6 +307,7 @@ const archiveEntries = [
     title: "Nomination papers forcefully snatched and torn inside the nomination centre",
     state: "Andhra Pradesh",
     category: "Others",
+    sourceType:"X (formerly Twitter)",
     year: "2026",
     url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0007-nomination-papers-forcefully-snatched-and-torn-inside-the-nomination-centre/"
   },
@@ -309,6 +316,7 @@ const archiveEntries = [
     title: "Name mishaps in Allahabad-Jhansi Graduate MLC election 2026",
     state: "Uttar Pradesh",
     category: "Electoral-Roll Problems",
+    sourceType:"X (formerly Twitter)",
     year: "2026",
     url: "https://gemsofindianelections.wordpress.com/2026/10/28/ind-2026-0008-name-mishaps-in-allahabad-jhansi-graduate-mlc-election-2026/"
   }
@@ -442,7 +450,7 @@ function searchArchive() {
     const metadata = document.createElement("p");
     metadata.className = "metadata";
     metadata.textContent =
-      `${entry.state} | ${entry.category} | ${entry.year}`;
+     `${entry.state} | ${entry.category} | ${entry.sourceType} | ${entry.year}`;
 
     card.appendChild(heading);
     card.appendChild(metadata);
