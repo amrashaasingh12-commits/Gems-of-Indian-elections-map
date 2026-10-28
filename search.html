@@ -247,7 +247,6 @@ establish the claims made.
 
 <script>
 
-const archiveEntries = [
  let archiveEntries = [];
 
 const form = document.getElementById("searchForm");
@@ -388,7 +387,14 @@ function searchArchive() {
 
 form.addEventListener("submit", event => {
   event.preventDefault();
-  fetch("./entries.json")
+  searchArchive();
+});
+
+form.addEventListener("reset", () => {
+  setTimeout(searchArchive, 0);
+});
+
+fetch("./entries.json")
   .then(response => {
     if (!response.ok) {
       throw new Error("Unable to load archive database");
@@ -401,15 +407,9 @@ form.addEventListener("submit", event => {
   })
   .catch(error => {
     console.error("Archive loading error:", error);
-    resultCount.textContent = "Unable to load archive entries. Please refresh the page.";
+    resultCount.textContent =
+      "Unable to load archive entries. Please refresh the page.";
   });
-
-form.addEventListener("reset", () => {
-  setTimeout(searchArchive, 0);
-});
-
-searchArchive();
-
 </script>
 
 </body>
