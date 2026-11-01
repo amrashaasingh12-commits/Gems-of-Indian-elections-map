@@ -257,7 +257,9 @@ const yearSelect = document.getElementById("year");
 const sourceTypeSelect = document.getElementById("sourceType");
 const resultsList = document.getElementById("resultsList");
 const resultCount = document.getElementById("resultCount");
-
+const totalCount = document.createElement("p");
+totalCount.id = "totalArchiveCount";
+resultCount.parentNode.insertBefore(totalCount, resultCount);
 function populateDropdown(select, values) {
   [...new Set(values)]
     .sort((a, b) => a.localeCompare(b))
@@ -391,7 +393,8 @@ form.addEventListener("submit", event => {
 });
 
 form.addEventListener("reset", () => {
-  setTimeout(searchArchive, 0);
+  resultsList.replaceChildren();
+  resultCount.textContent = "";
 });
 
 fetch("./entries.json")
@@ -403,8 +406,8 @@ fetch("./entries.json")
   })
   .then(data => {
     archiveEntries = data;
-    searchArchive();
-  })
+    totalCount.textContent = `Total archived entries: ${archiveEntries.length}`;
+      })
   .catch(error => {
     console.error("Archive loading error:", error);
     resultCount.textContent =
