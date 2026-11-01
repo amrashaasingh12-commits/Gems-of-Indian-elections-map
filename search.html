@@ -337,8 +337,9 @@ function searchArchive() {
   const sourceType = sourceTypeSelect.value;
   const matches = archiveEntries.filter(entry => {
     const searchableText =
-      `${entry.id} ${entry.title} ${entry.state} ${entry.category} ${entry.year}`
-        .toLowerCase();
+    const searchableText =
+  `${entry.id} ${entry.title} ${entry.summary || ""} ${entry.state} ${entry.category} ${entry.sourceType || ""} ${entry.year}`
+    .toLowerCase();
 
     return (
       (!keyword || searchableText.includes(keyword)) &&
