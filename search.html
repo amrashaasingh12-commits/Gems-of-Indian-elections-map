@@ -336,8 +336,7 @@ function searchArchive() {
   const year = yearSelect.value;
   const sourceType = sourceTypeSelect.value;
   const matches = archiveEntries.filter(entry => {
-    const searchableText =
-    const searchableText =
+const searchableText =
   `${entry.id} ${entry.title} ${entry.summary || ""} ${entry.state} ${entry.category} ${entry.sourceType || ""} ${entry.year}`
     .toLowerCase();
 
