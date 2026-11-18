@@ -343,7 +343,9 @@ const searchableText =
 
     return (
       (!keyword || searchableText.includes(keyword)) &&
-      (!state || entry.state === state) &&
+      (!state || (Array.isArray(entry.state)
+  ? entry.state.includes(state)
+  : entry.state === state)) &&
      (!category || entry.category === category) &&
 (!sourceType || entry.sourceType === sourceType) &&
 (!year || entry.year === year)
@@ -380,7 +382,7 @@ const searchableText =
     const metadata = document.createElement("p");
     metadata.className = "metadata";
     metadata.textContent =
-     `${entry.state} | ${entry.category} | ${entry.sourceType} | ${entry.year}`;
+  `${Array.isArray(entry.state) ? entry.state.join(", ") : entry.state} | ${entry.category} | ${entry.sourceType} | ${entry.year}`;
 
     card.appendChild(heading);
     card.appendChild(metadata);
