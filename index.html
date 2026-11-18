@@ -345,9 +345,16 @@ svg.selectAll("path.state")
 const name = getStateName(feature);
 nameElement.textContent = name;
 
-const entries = archiveEntries.filter(
-  entry => entry.state.toLowerCase() === name.toLowerCase()
-);
+const entries = archiveEntries.filter(entry => {
+  const states = Array.isArray(entry.state)
+    ? entry.state
+    : [entry.state];
+
+  return states.some(state =>
+    typeof state === "string" &&
+    state.toLowerCase().trim() === name.toLowerCase().trim()
+  );
+});
 
 infoElement.textContent = entries.length === 0
   ? "No entries have been added to the map for this area yet."
